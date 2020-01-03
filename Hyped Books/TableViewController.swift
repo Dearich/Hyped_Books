@@ -13,13 +13,20 @@ import UIKit
 class TableViewController: UITableViewController {
     
     var books : [Book] = []
-    
+    var isLoading:Bool = false
+     var limit = 5
+     let activityIndicatror = UIActivityIndicatorView(style: .medium)
     @IBOutlet var booksTable: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Hyped Books"
+        navigationItem.largeTitleDisplayMode = .automatic
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationItem.largeTitleDisplayMode = .automatic
         fetchData()
-        
+       
+       
     
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -77,20 +84,10 @@ class TableViewController: UITableViewController {
 
         return cell
     }
-//MARK: Pagination
+//MARK: Pagination, tableView willDisplay
+    
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-         let count = books.count
-        if indexPath.row == (count-1){
-            let activityIndicatror = UIActivityIndicatorView(style: .medium)
-            activityIndicatror.startAnimating()
-            activityIndicatror.frame = CGRect(x: CGFloat(0), y:CGFloat(0), width:tableView.bounds.width, height: CGFloat(30))
-            self.fetchData()
-            self.booksTable.tableFooterView = activityIndicatror
-            self.booksTable.tableFooterView?.isHidden = false
-            
-        }
-            
-        
+       
     }
 
 // MARK: - Navigation
@@ -104,12 +101,12 @@ class TableViewController: UITableViewController {
                     //получение номера строки
                     let selectedCellIndexPath = tableView.indexPathForSelectedRow!
 
-                    //создаем экземпляр для правилньной передачи данных ко второму вью контроллеру
+                    //создаем экземпляр для правилньной передачи данных к WebView
                     let book = booksToDisplayAt(indexPath: selectedCellIndexPath)
                   
                     webViewController.uuid = book.uuid
                     print(book.uuid+"uuid")
-                    //передаем значение индекса ко второму viewController
+                    //передаем значение индекса ко WebViewController
                 }
     }
     
@@ -121,6 +118,7 @@ class TableViewController: UITableViewController {
 }
 extension TableViewController{
     func fetchData(){
+        isLoading = true
         guard let url = URL(string: "https://api.bookmate.com/api/v5/books/popular/") else {return}
                
                let session = URLSession.shared
@@ -139,8 +137,9 @@ extension TableViewController{
                     print(books.books[0])
                     DispatchQueue.main.async {
                         self.books = books.books
+                        self.activityIndicatror.stopAnimating()
+                        self.activityIndicatror.isHidden = true
                         
-                        print(1)
                         self.booksTable.reloadData()
                     }
                    }catch{
