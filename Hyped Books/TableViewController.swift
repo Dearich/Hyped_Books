@@ -14,9 +14,11 @@ class TableViewController: UITableViewController {
     
     var books : [Book] = []
     var isLoading:Bool = false
-     var limit = 5
-     let activityIndicatror = UIActivityIndicatorView(style: .medium)
+    var limit = 5
+    
     @IBOutlet var booksTable: UITableView!
+
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,15 +26,6 @@ class TableViewController: UITableViewController {
         navigationItem.largeTitleDisplayMode = .automatic
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationItem.largeTitleDisplayMode = .automatic
-        fetchData()
-       
-       
-    
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
 // MARK: - Table view data source
@@ -52,9 +45,6 @@ class TableViewController: UITableViewController {
     func booksToDisplayAt(indexPath: IndexPath) -> Book {
          //экземпляр класса
         let correntBookInfo = books[indexPath.row]
-            
-        
-        
          return correntBookInfo
         }
        
@@ -89,6 +79,8 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
        
     }
+    
+    
 
 // MARK: - Navigation
 
@@ -136,11 +128,10 @@ extension TableViewController{
                        let books = try JSONDecoder().decode(Books.self, from: data)
                     print(books.books[0])
                     DispatchQueue.main.async {
-                        self.books = books.books
-                        self.activityIndicatror.stopAnimating()
-                        self.activityIndicatror.isHidden = true
-                        
+                        self.books.append(contentsOf: books.books)
+                        self.isLoading = false
                         self.booksTable.reloadData()
+                        
                     }
                    }catch{
                        print(error )
@@ -153,5 +144,21 @@ extension TableViewController{
     func configureImageAtRow(cell: UITableViewCell, indexPath:IndexPath) {
         
         
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offSetY =  scrollView.contentOffset.y
+        let contentHight = scrollView.contentSize.height
+        
+        //определение положения scrollView в нижней точке и отслеживание процесса overscrolling
+        
+        if offSetY > contentHight - scrollView.frame.height * 3 {
+            if !isLoading{
+                print("beginLoad ")
+                fetchData()
+            }
+            
+        }
+         
     }
 }
