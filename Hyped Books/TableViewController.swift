@@ -14,18 +14,34 @@ class TableViewController: UITableViewController {
     
     var books : [Book] = []
     var isLoading:Bool = false
-    var limit = 5
+    var limit = true
+    var indicator = UIActivityIndicatorView()
     
     @IBOutlet var booksTable: UITableView!
 
     
-    
+    override func viewWillAppear(_ animated: Bool) {
+        if CheckInternetConnection.Connection() {
+            guard limit else {return}
+            limit = false
+            self.activityIndicator()
+            indicator.startAnimating()
+            indicator.backgroundColor = .clear
+            
+        }else {
+                self.Alert(Message: "Подключитесь к интернету!")
+                
+            
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Hyped Books"
         navigationItem.largeTitleDisplayMode = .automatic
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationItem.largeTitleDisplayMode = .automatic
+        booksTable.estimatedRowHeight = 182
+        booksTable.rowHeight = UITableView.automaticDimension
     }
 
 // MARK: - Table view data source
@@ -39,6 +55,10 @@ class TableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of rows
         
         return books.count
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 182
     }
     
 
@@ -59,19 +79,15 @@ class TableViewController: UITableViewController {
         cell.annotationLabelOutlet.text = book.annotation
         cell.titleLabelOutlet.text = book.title
         
-        DispatchQueue.global().async {
-            let urlForImage = self.books[indexPath.row].cover.large
-            guard let urlStringForImage = URL(string: urlForImage) else{return}
-            guard let imageData = try? Data(contentsOf: urlStringForImage) else{return}
-            
-            let image = UIImage(data: imageData)
-            
-            DispatchQueue.main.async {
-                cell.imageViewOutlet.image = image
+//
+//        DispatchQueue.global().async {
+        let urlForImage = self.books[indexPath.row].cover.large
+        
+        if let urlStringForImage = URL(string: urlForImage) {
+            ImageService.getImageFromCashe(withURL: urlStringForImage) { image in
+            cell.imageViewOutlet.image = image
             }
         }
-        
-
         return cell
     }
 //MARK: Pagination, tableView willDisplay
@@ -85,21 +101,25 @@ class TableViewController: UITableViewController {
 // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         
-        if segue.identifier == "showWebInfo"
-                {
-                    //связь с конечным контролером
-                    let webViewController = segue.destination as! WebViewController
-                    //получение номера строки
-                    let selectedCellIndexPath = tableView.indexPathForSelectedRow!
+        if CheckInternetConnection.Connection(){
+            if segue.identifier == "showWebInfo"
+            {
+                //связь с конечным контролером
+                let webViewController = segue.destination as! WebViewController
+                //получение номера строки
+                let selectedCellIndexPath = tableView.indexPathForSelectedRow!
 
-                    //создаем экземпляр для правилньной передачи данных к WebView
-                    let book = booksToDisplayAt(indexPath: selectedCellIndexPath)
-                  
-                    webViewController.uuid = book.uuid
-                    print(book.uuid+"uuid")
-                    //передаем значение индекса ко WebViewController
-                }
+                //создаем экземпляр для правилньной передачи данных к WebView
+                let book = booksToDisplayAt(indexPath: selectedCellIndexPath)
+              
+                webViewController.uuid = book.uuid
+                print(book.uuid+"uuid")
+                //передаем значение индекса ко WebViewController
+            }
+        } else{
+            self.Alert(Message: " Проверьте подключение к интернету.")
+        }
+        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -108,6 +128,10 @@ class TableViewController: UITableViewController {
     
 
 }
+
+
+
+
 extension TableViewController{
     func fetchData(){
         isLoading = true
@@ -116,8 +140,6 @@ extension TableViewController{
                let session = URLSession.shared
                // начало сессии
                session.dataTask(with: url) { (data, response, error) in
-                   guard let response = response else { return }
-                   
                    //получаем наши данные
                    guard let data = data else{return}
 //                   print(data)
@@ -130,7 +152,12 @@ extension TableViewController{
                     DispatchQueue.main.async {
                         self.books.append(contentsOf: books.books)
                         self.isLoading = false
-                        self.booksTable.reloadData()
+                        DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
+                            self.indicator.stopAnimating()
+                            self.indicator.hidesWhenStopped = true
+                            self.booksTable.reloadData()
+                        }
+                        
                         
                     }
                    }catch{
@@ -161,4 +188,23 @@ extension TableViewController{
         }
          
     }
+    func Alert (Message: String){
+        
+        let alert = UIAlertController(title: "Нет подключения!", message: Message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert,animated: true,completion: nil)
+    }
+   
+    func activityIndicator() {
+        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 140, height: 140))
+        
+        indicator.style = UIActivityIndicatorView.Style.large
+        indicator.color = .lightGray
+        indicator.center = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY - 100.0)
+        self.view.addSubview(indicator)
+    }
 }
+
+
+    
+

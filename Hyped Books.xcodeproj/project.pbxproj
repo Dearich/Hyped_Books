@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		15C5675723BE04B600ADB0AA /* BooksTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C5675623BE04B600ADB0AA /* BooksTableViewCell.swift */; };
 		15C5675923BE074D00ADB0AA /* BookModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C5675823BE074D00ADB0AA /* BookModel.swift */; };
+		15C5675B23C0AC9600ADB0AA /* CheckInternetConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C5675A23C0AC9600ADB0AA /* CheckInternetConnection.swift */; };
+		15C5675D23C0EC2900ADB0AA /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C5675C23C0EC2900ADB0AA /* ImageService.swift */; };
 		15CFD8F023BCEF46009680BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CFD8EF23BCEF46009680BE /* AppDelegate.swift */; };
 		15CFD8F223BCEF46009680BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15CFD8F123BCEF46009680BE /* SceneDelegate.swift */; };
 		15CFD8F723BCEF46009680BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 15CFD8F523BCEF46009680BE /* Main.storyboard */; };
@@ -22,6 +24,8 @@
 /* Begin PBXFileReference section */
 		15C5675623BE04B600ADB0AA /* BooksTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksTableViewCell.swift; sourceTree = "<group>"; };
 		15C5675823BE074D00ADB0AA /* BookModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookModel.swift; sourceTree = "<group>"; };
+		15C5675A23C0AC9600ADB0AA /* CheckInternetConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInternetConnection.swift; sourceTree = "<group>"; };
+		15C5675C23C0EC2900ADB0AA /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		15CFD8EC23BCEF46009680BE /* Hyped Books.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hyped Books.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		15CFD8EF23BCEF46009680BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		15CFD8F123BCEF46009680BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +79,8 @@
 				15C5675623BE04B600ADB0AA /* BooksTableViewCell.swift */,
 				15CFD90A23BCF953009680BE /* WebViewController.swift */,
 				15C5675823BE074D00ADB0AA /* BookModel.swift */,
+				15C5675A23C0AC9600ADB0AA /* CheckInternetConnection.swift */,
+				15C5675C23C0EC2900ADB0AA /* ImageService.swift */,
 			);
 			path = "Hyped Books";
 			sourceTree = "<group>";
@@ -152,11 +158,13 @@
 			files = (
 				15C5675723BE04B600ADB0AA /* BooksTableViewCell.swift in Sources */,
 				15CFD90B23BCF953009680BE /* WebViewController.swift in Sources */,
+				15C5675D23C0EC2900ADB0AA /* ImageService.swift in Sources */,
 				15CFD8F023BCEF46009680BE /* AppDelegate.swift in Sources */,
 				15CFD8F223BCEF46009680BE /* SceneDelegate.swift in Sources */,
 				15CFD8FA23BCEF46009680BE /* Hyped_Books.xcdatamodeld in Sources */,
 				15CFD90723BCF852009680BE /* TableViewController.swift in Sources */,
 				15C5675923BE074D00ADB0AA /* BookModel.swift in Sources */,
+				15C5675B23C0AC9600ADB0AA /* CheckInternetConnection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
