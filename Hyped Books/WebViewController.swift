@@ -21,6 +21,7 @@ class WebViewController: UIViewController {
         super.viewDidLoad()
         activityIndicator.isHidden = true
         webView.navigationDelegate = self
+        navigationItem.largeTitleDisplayMode = .never
         
         let myURL = URL(string: "https://bookmate.com/books/\(uuid ?? "VVedHgBa")")
         let request = URLRequest(url: myURL!)
@@ -30,6 +31,7 @@ class WebViewController: UIViewController {
     fileprivate func showIndicator(show: Bool){
         if show{
             activityIndicator.startAnimating()
+        
         }else{
             activityIndicator.stopAnimating()
             activityIndicator.isHidden = true
