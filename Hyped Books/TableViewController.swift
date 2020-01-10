@@ -26,6 +26,7 @@ class TableViewController: UITableViewController {
             limit = false
             self.activityIndicator()
             indicator.startAnimating()
+            booksTable.separatorStyle = .none
             indicator.backgroundColor = .clear
             
         }else {
@@ -155,6 +156,7 @@ extension TableViewController{
                         DispatchQueue.main.asyncAfter(deadline: .now()+0.8) {
                             self.indicator.stopAnimating()
                             self.indicator.hidesWhenStopped = true
+                            self.booksTable.separatorStyle = .singleLine
                             self.booksTable.reloadData()
                         }
                         
